@@ -1,7 +1,6 @@
 package com.example.test_tts;
 
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private TextToSpeech tts;
+    private HuggingFaceTTS huggingFaceTTS;
     private long startTime;
     private long endTime;
     private boolean isTtsInitialized = false;
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        // TTS 엔진 초기화
-        initializeTTS();
+        // HuggingFace TTS 초기화
+        initializeHuggingFaceTTS();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -57,77 +56,50 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initializeTTS() {
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+    private void initializeHuggingFaceTTS() {
+        huggingFaceTTS = new HuggingFaceTTS(this);
+        huggingFaceTTS.initializeModel(new HuggingFaceTTS.TTSListener() {
             @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    // TTS 엔진 초기화 성공
-                    int result = tts.setLanguage(Locale.KOREAN);
+            public void onTTSReady() {
+                isTtsInitialized = true;
+                Log.d("HuggingFaceTTS", "모델 초기화 완료");
+                Snackbar.make(binding.getRoot(), "HuggingFace TTS 모델이 준비되었습니다", Snackbar.LENGTH_SHORT).show();
+            }
 
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "한국어 언어가 지원되지 않습니다.");
-                    } else {
-                        // On-Device 엔진 사용 설정 (가능한 경우)
-                        tts.setEngineByPackageName("com.google.android.tts");
+            @Override
+            public void onTTSError(String error) {
+                Log.e("HuggingFaceTTS", "모델 초기화 실패: " + error);
+                Snackbar.make(binding.getRoot(), "모델 초기화 실패: " + error, Snackbar.LENGTH_LONG).show();
+            }
 
-                        isTtsInitialized = true;
-                        Log.d("TTS", "TTS 엔진 초기화 완료 (한국어)");
-                    }
-                } else {
-                    Log.e("TTS", "TTS 엔진 초기화 실패");
-                }
+            @Override
+            public void onTTSComplete(long latencyMs) {
+                // TTS 완료됨 - 종료 시간 기록 및 로그 출력
+                endTime = System.currentTimeMillis();
+                long totalLatency = latencyMs;
+
+                Log.d("HuggingFaceTTS Latency", "TTS 처리 시간: " + totalLatency + "ms");
+
+                // Fragment에 실시간으로 latency 업데이트
+                updateFragmentLatency(totalLatency);
+
+                Snackbar.make(binding.getRoot(), "TTS 완료 (지연시간: " + totalLatency + "ms)", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
     public void speakKorean(String text) {
-        if (!isTtsInitialized || tts == null) {
-            Log.e("TTS", "TTS가 초기화되지 않았습니다.");
+        if (!isTtsInitialized || huggingFaceTTS == null) {
+            Log.e("HuggingFaceTTS", "TTS가 초기화되지 않았습니다.");
+            Snackbar.make(binding.getRoot(), "TTS가 초기화되지 않았습니다", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
         // 시작 시간 기록
         startTime = System.currentTimeMillis();
 
-        // UtteranceProgressListener 설정 (완료 시간 측정용)
-        tts.setOnUtteranceProgressListener(new android.speech.tts.UtteranceProgressListener() {
-            @Override
-            public void onStart(String utteranceId) {
-                // TTS 시작됨
-            }
-
-            @Override
-            public void onDone(String utteranceId) {
-                // TTS 완료됨 - 종료 시간 기록 및 로그 출력
-                endTime = System.currentTimeMillis();
-                long latency = endTime - startTime;
-
-                Log.d("TTS Latency", "TTS 처리 시간: " + latency + "ms");
-
-                // Fragment에 실시간으로 latency 업데이트
-                updateFragmentLatency(latency);
-
-                Snackbar.make(binding.getRoot(), "TTS 완료 (지연시간: " + latency + "ms)", Snackbar.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(String utteranceId) {
-                // TTS 오류 발생
-                endTime = System.currentTimeMillis();
-                long latency = endTime - startTime;
-
-                Log.e("TTS Error", "TTS 오류 발생 (지연시간: " + latency + "ms)");
-
-                // Fragment에 오류 상태 업데이트
-                updateFragmentError(latency);
-
-                Snackbar.make(binding.getRoot(), "TTS 오류 발생", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
-        // 한국어 텍스트를 음성으로 변환
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+        // HuggingFaceTTS를 통한 텍스트 음성 변환
+        huggingFaceTTS.speak(text);
     }
 
     @Override
@@ -162,9 +134,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (tts != null) {
-            tts.stop();
-            tts.shutdown();
+        if (huggingFaceTTS != null) {
+            huggingFaceTTS.shutdown();
         }
         currentFragment = null;
     }
