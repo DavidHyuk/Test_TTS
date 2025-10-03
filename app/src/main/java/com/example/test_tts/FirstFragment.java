@@ -5,12 +5,17 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.test_tts.databinding.FragmentFirstBinding;
+
+import java.util.Locale;
 
 public class FirstFragment extends Fragment {
 
@@ -41,10 +46,13 @@ public class FirstFragment extends Fragment {
             ((MainActivity) requireActivity()).setCurrentFragment(this);
         }
 
+        // 언어 선택 Spinner 설정
+        setupLanguageSpinner();
+
         binding.buttonTts.setOnClickListener(v -> {
             String text = binding.edittextKorean.getText().toString().trim();
             if (TextUtils.isEmpty(text)) {
-                Toast.makeText(requireContext(), "한국어 텍스트를 입력해주세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.enter_korean_text), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -53,7 +61,7 @@ public class FirstFragment extends Fragment {
 
             // MainActivity의 TTS 기능 호출
             MainActivity mainActivity = (MainActivity) requireActivity();
-            mainActivity.speakKorean(text);
+            mainActivity.speakText(text);
         });
     }
 
@@ -72,7 +80,7 @@ public class FirstFragment extends Fragment {
      */
     public void updateLatencyDisplay(long latencyMs) {
         if (binding != null && binding.textviewLatency != null) {
-            binding.textviewLatency.setText("⚡ 지연시간: " + latencyMs + "ms");
+            binding.textviewLatency.setText(String.format(getString(R.string.latency_display), latencyMs));
             binding.textviewLatency.setTextColor(0xFF4CAF50); // 녹색
         }
     }
@@ -82,7 +90,7 @@ public class FirstFragment extends Fragment {
      */
     public void updateErrorDisplay(long latencyMs) {
         if (binding != null && binding.textviewLatency != null) {
-            binding.textviewLatency.setText("❌ 오류 (" + latencyMs + "ms)");
+            binding.textviewLatency.setText(String.format(getString(R.string.error_display), latencyMs));
             binding.textviewLatency.setTextColor(0xFFF44336); // 빨간색
         }
     }
@@ -92,9 +100,60 @@ public class FirstFragment extends Fragment {
      */
     public void resetLatencyDisplay() {
         if (binding != null && binding.textviewLatency != null) {
-            binding.textviewLatency.setText("대기 중...");
+            binding.textviewLatency.setText(getString(R.string.waiting));
             binding.textviewLatency.setTextColor(0xFF666666); // 회색
         }
+    }
+
+    /**
+     * 언어 선택 Spinner를 설정하는 메서드
+     */
+    private void setupLanguageSpinner() {
+        String[] languages = {
+            getString(R.string.language_korean),
+            getString(R.string.language_english),
+            getString(R.string.language_spanish)
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_item, languages);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        binding.spinnerLanguage.setAdapter(adapter);
+
+        // 기본 선택: 한국어 (인덱스 0)
+        binding.spinnerLanguage.setSelection(0);
+
+        binding.spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Locale selectedLocale;
+                switch (position) {
+                    case 0:
+                        selectedLocale = Locale.KOREAN;
+                        break;
+                    case 1:
+                        selectedLocale = Locale.ENGLISH;
+                        break;
+                    case 2:
+                        selectedLocale = new Locale("es", "ES"); // Spanish
+                        break;
+                    default:
+                        selectedLocale = Locale.KOREAN;
+                        break;
+                }
+
+                // MainActivity에 언어 변경 요청
+                if (requireActivity() instanceof MainActivity) {
+                    ((MainActivity) requireActivity()).setLanguage(selectedLocale);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // 아무것도 선택되지 않음
+            }
+        });
     }
 
 }

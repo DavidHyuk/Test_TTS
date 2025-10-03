@@ -1,35 +1,35 @@
 <resources>
-    <string name="app_name">테스트 TTS</string>
-    <string name="action_settings">설정</string>
+    <string name="app_name">Test TTS</string>
+    <string name="action_settings">Configuración</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">첫 번째 프래그먼트</string>
-    <string name="second_fragment_label">두 번째 프래그먼트</string>
-    <string name="next">다음</string>
-    <string name="previous">이전</string>
+    <string name="first_fragment_label">Primer Fragmento</string>
+    <string name="second_fragment_label">Segundo Fragmento</string>
+    <string name="next">Siguiente</string>
+    <string name="previous">Anterior</string>
 
-    <!-- TTS 관련 문자열 -->
-    <string name="fab_message">상단의 텍스트 입력란에 한국어를 입력하고 TTS 버튼을 클릭하세요</string>
-    <string name="tts_language_not_supported">한국어 언어가 지원되지 않습니다.</string>
-    <string name="tts_init_failed">TTS 엔진 초기화 실패</string>
-    <string name="tts_not_initialized">TTS가 초기화되지 않았습니다.</string>
-    <string name="tts_latency_log">TTS 처리 시간: %1$dms</string>
-    <string name="tts_completed">TTS 완료 (지연시간: %1$dms)</string>
-    <string name="tts_error_log">TTS 오류 발생 (지연시간: %1$dms)</string>
-    <string name="tts_error">TTS 오류 발생</string>
-    <string name="tts_init_success">TTS 엔진 초기화 완료 (한국어)</string>
+    <!-- Cadenas relacionadas con TTS -->
+    <string name="fab_message">Ingresa texto en coreano en el campo de entrada arriba y haz clic en el botón TTS</string>
+    <string name="tts_language_not_supported">El idioma coreano no está soportado.</string>
+    <string name="tts_init_failed">Fallo en la inicialización del motor TTS</string>
+    <string name="tts_not_initialized">TTS no está inicializado.</string>
+    <string name="tts_latency_log">Tiempo de procesamiento TTS: %1$dms</string>
+    <string name="tts_completed">TTS completado (latencia: %1$dms)</string>
+    <string name="tts_error_log">Ocurrió un error en TTS (latencia: %1$dms)</string>
+    <string name="tts_error">Ocurrió un error en TTS</string>
+    <string name="tts_init_success">Motor TTS inicializado exitosamente (Coreano)</string>
 
-    <!-- FirstFragment 문자열 -->
-    <string name="enter_korean_text">한국어 텍스트를 입력해주세요</string>
-    <string name="latency_display">⚡ 지연시간: %1$dms</string>
-    <string name="error_display">❌ 오류 (%1$dms)</string>
-    <string name="waiting">대기 중...</string>
+    <!-- Cadenas de FirstFragment -->
+    <string name="enter_korean_text">Por favor ingresa texto en coreano</string>
+    <string name="latency_display">⚡ Latencia: %1$dms</string>
+    <string name="error_display">❌ Error (%1$dms)</string>
+    <string name="waiting">Esperando...</string>
 
-    <!-- 언어 선택 -->
-    <string name="language_korean">한국어</string>
-    <string name="language_english">영어</string>
-    <string name="language_spanish">스페인어</string>
-    <string name="select_language">언어 선택</string>
-    <string name="enter_text_hint">텍스트를 입력하세요</string>
+    <!-- Selección de idioma -->
+    <string name="language_korean">Coreano</string>
+    <string name="language_english">Inglés</string>
+    <string name="language_spanish">Español</string>
+    <string name="select_language">Seleccionar Idioma</string>
+    <string name="enter_text_hint">Ingresa texto</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

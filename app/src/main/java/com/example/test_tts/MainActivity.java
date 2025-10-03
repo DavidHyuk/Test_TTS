@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private long endTime;
     private boolean isTtsInitialized = false;
     private FirstFragment currentFragment;
+    private Locale currentLocale = Locale.KOREAN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "상단의 텍스트 입력란에 한국어를 입력하고 TTS 버튼을 클릭하세요", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, getString(R.string.fab_message), Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -63,27 +64,38 @@ public class MainActivity extends AppCompatActivity {
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     // TTS 엔진 초기화 성공
-                    int result = tts.setLanguage(Locale.KOREAN);
+                    int result = tts.setLanguage(currentLocale);
 
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "한국어 언어가 지원되지 않습니다.");
+                        Log.e("TTS", getString(R.string.tts_language_not_supported) + " (" + currentLocale.getDisplayName() + ")");
                     } else {
                         // On-Device 엔진 사용 설정 (가능한 경우)
                         tts.setEngineByPackageName("com.google.android.tts");
 
                         isTtsInitialized = true;
-                        Log.d("TTS", "TTS 엔진 초기화 완료 (한국어)");
+                        Log.d("TTS", getString(R.string.tts_init_success) + " (" + currentLocale.getDisplayName() + ")");
                     }
                 } else {
-                    Log.e("TTS", "TTS 엔진 초기화 실패");
+                    Log.e("TTS", getString(R.string.tts_init_failed));
                 }
             }
         });
     }
 
-    public void speakKorean(String text) {
+    public void setLanguage(Locale locale) {
+        currentLocale = locale;
+        // Re-initialize TTS with new language if already initialized
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+            isTtsInitialized = false;
+            initializeTTS();
+        }
+    }
+
+    public void speakText(String text) {
         if (!isTtsInitialized || tts == null) {
-            Log.e("TTS", "TTS가 초기화되지 않았습니다.");
+            Log.e("TTS", getString(R.string.tts_not_initialized));
             return;
         }
 
@@ -103,12 +115,12 @@ public class MainActivity extends AppCompatActivity {
                 endTime = System.currentTimeMillis();
                 long latency = endTime - startTime;
 
-                Log.d("TTS Latency", "TTS 처리 시간: " + latency + "ms");
+                Log.d("TTS Latency", String.format(getString(R.string.tts_latency_log), latency));
 
                 // Fragment에 실시간으로 latency 업데이트
                 updateFragmentLatency(latency);
 
-                Snackbar.make(binding.getRoot(), "TTS 완료 (지연시간: " + latency + "ms)", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), String.format(getString(R.string.tts_completed), latency), Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
@@ -117,12 +129,12 @@ public class MainActivity extends AppCompatActivity {
                 endTime = System.currentTimeMillis();
                 long latency = endTime - startTime;
 
-                Log.e("TTS Error", "TTS 오류 발생 (지연시간: " + latency + "ms)");
+                Log.e("TTS Error", String.format(getString(R.string.tts_error_log), latency));
 
                 // Fragment에 오류 상태 업데이트
                 updateFragmentError(latency);
 
-                Snackbar.make(binding.getRoot(), "TTS 오류 발생", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), getString(R.string.tts_error), Snackbar.LENGTH_SHORT).show();
             }
         });
 

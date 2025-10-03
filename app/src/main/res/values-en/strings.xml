@@ -1,35 +1,35 @@
 <resources>
-    <string name="app_name">테스트 TTS</string>
-    <string name="action_settings">설정</string>
+    <string name="app_name">Test TTS</string>
+    <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">첫 번째 프래그먼트</string>
-    <string name="second_fragment_label">두 번째 프래그먼트</string>
-    <string name="next">다음</string>
-    <string name="previous">이전</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
 
-    <!-- TTS 관련 문자열 -->
-    <string name="fab_message">상단의 텍스트 입력란에 한국어를 입력하고 TTS 버튼을 클릭하세요</string>
-    <string name="tts_language_not_supported">한국어 언어가 지원되지 않습니다.</string>
-    <string name="tts_init_failed">TTS 엔진 초기화 실패</string>
-    <string name="tts_not_initialized">TTS가 초기화되지 않았습니다.</string>
-    <string name="tts_latency_log">TTS 처리 시간: %1$dms</string>
-    <string name="tts_completed">TTS 완료 (지연시간: %1$dms)</string>
-    <string name="tts_error_log">TTS 오류 발생 (지연시간: %1$dms)</string>
-    <string name="tts_error">TTS 오류 발생</string>
-    <string name="tts_init_success">TTS 엔진 초기화 완료 (한국어)</string>
+    <!-- TTS related strings -->
+    <string name="fab_message">Enter Korean text in the input field above and click the TTS button</string>
+    <string name="tts_language_not_supported">Korean language is not supported.</string>
+    <string name="tts_init_failed">TTS engine initialization failed</string>
+    <string name="tts_not_initialized">TTS is not initialized.</string>
+    <string name="tts_latency_log">TTS processing time: %1$dms</string>
+    <string name="tts_completed">TTS completed (latency: %1$dms)</string>
+    <string name="tts_error_log">TTS error occurred (latency: %1$dms)</string>
+    <string name="tts_error">TTS error occurred</string>
+    <string name="tts_init_success">TTS engine initialized successfully (Korean)</string>
 
-    <!-- FirstFragment 문자열 -->
-    <string name="enter_korean_text">한국어 텍스트를 입력해주세요</string>
-    <string name="latency_display">⚡ 지연시간: %1$dms</string>
-    <string name="error_display">❌ 오류 (%1$dms)</string>
-    <string name="waiting">대기 중...</string>
+    <!-- FirstFragment strings -->
+    <string name="enter_korean_text">Please enter Korean text</string>
+    <string name="latency_display">⚡ Latency: %1$dms</string>
+    <string name="error_display">❌ Error (%1$dms)</string>
+    <string name="waiting">Waiting...</string>
 
-    <!-- 언어 선택 -->
-    <string name="language_korean">한국어</string>
-    <string name="language_english">영어</string>
-    <string name="language_spanish">스페인어</string>
-    <string name="select_language">언어 선택</string>
-    <string name="enter_text_hint">텍스트를 입력하세요</string>
+    <!-- Language selection -->
+    <string name="language_korean">Korean</string>
+    <string name="language_english">English</string>
+    <string name="language_spanish">Spanish</string>
+    <string name="select_language">Select Language</string>
+    <string name="enter_text_hint">Enter text</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
